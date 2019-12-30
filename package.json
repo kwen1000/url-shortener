@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/kwen1000/url-shortener/issues"
   },
-  "homepage": "https://github.com/kwen1000/url-shortener#readme"
+  "homepage": "https://github.com/kwen1000/url-shortener#readme",
+  "dependencies": {
+    "mongodb": "^3.4.1"
+  }
 }
