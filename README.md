@@ -1,2 +1,10 @@
 # url-shortener
-URL Shortener
+
+Setup and initialize MongoDB.
+
+` $ mongod`
+
+
+To start
+
+` $ npm start`

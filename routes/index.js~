@@ -1,6 +1,3 @@
-var mongodb = require('mongodb');
-var validurl = require('valid-url');
-var shortid = require('shortid');
 var express = require('express');
 var router = express.Router();
 
