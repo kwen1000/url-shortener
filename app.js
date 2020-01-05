@@ -1,6 +1,3 @@
-import mongoose from 'mongoose';
-import express from 'express';
-
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -42,10 +39,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-
-mongoose.connect("mongodb://localhost:3000/shortener")
-
-var schema = mongoose.Schema({
-    original: String,
-    shortCode: {type: Number, index: true}
-});
