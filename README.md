@@ -1,10 +1,16 @@
 # url-shortener
 
-Setup and initialize MongoDB.
+Initialize MongoDB 2.2.33.
 
 ` $ mongod`
 
 
-To start
+To start:
 
 ` $ npm start`
+
+
+Mongo console:
+
+` $ mongo url-shortener`
+

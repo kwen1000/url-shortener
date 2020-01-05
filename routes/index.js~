@@ -1,24 +1,36 @@
 var mongodb = require('mongodb');
-var validurl = require('valid-url');
-var shortid = require('shortid');
-var express = require('express');
-var router = express.Router();
-var service = "mongodb://localhost:27017/shortener-service";
+var router = require("express").Router();
+var service = "mongodb://localhost:27017/url-shortener";
+
+function validURL(url) {
+    var reg = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    return reg.test(url);
+}
 
 function onGet(req, res, next) {
     mongodb.MongoClient.connect(service, (error, database) => {
         if (error) {
 	    console.log(error);
+	    try {
+		database.close();
+	    }
 	    return;
         }
-        var link = { url: req.params.url, short: "test" };
-        database.collection("links").insert([link]);
-	res.send(red.params.url);
+	if (!validURL(req.params.url)) {
+	    console.log("Invalid URL.");
+	    database.close();
+	    return;
+	}
+        database.collection("stuff").insert(
+	    [{URL: req.params.url, blah: "abc"}]
+        );
+	res.send(req.params.url);
+	database.close();
     });
 }
 
 router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Express' });
+    res.render('index', { title: "Express" });
 });
 
 router.get("/new/:url(*)", onGet);
