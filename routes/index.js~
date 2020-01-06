@@ -7,16 +7,23 @@ function validURL(url) {
     return reg.test(url);
 }
 
+function generateURL(url) {
+    return new Date().getTime();
+}
+
 function onGet(req, res, next) {
     mongodb.MongoClient.connect(service, (error, database) => {
         if (error) {
+	    res.json({ "error": "Database error." });
 	    console.log(error);
 	    try {
 		database.close();
 	    }
+	    catch {}
 	    return;
         }
 	if (!validURL(req.params.url)) {
+	    res.json({ "error": "Invalid URL." });
 	    console.log("Invalid URL.");
 	    database.close();
 	    return;
