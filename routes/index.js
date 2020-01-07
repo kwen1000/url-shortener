@@ -10,11 +10,12 @@ function validURL(url) {
 
 function generateURL(url) {
     // This method currently only returns the milliseconds from Unix time
-    return new Date().getTime();
+    return "" + new Date().getTime();
 }
 
 function onGet(req, res, next) {
     mongodb.MongoClient.connect(service, (error, database) => {
+	// Error handling
         if (error) {
 	    res.json({ "error": "Database error." });
 	    console.log(error);
@@ -24,27 +25,66 @@ function onGet(req, res, next) {
 	    catch {}
 	    return;
         }
-	if (!validURL(req.params.url)) {
+	// Invalid URL entered
+	if (!validURL(req.params.link)) {
 	    res.json({ "error": "Invalid URL." });
 	    console.log("Invalid URL.");
 	    database.close();
 	    return;
 	}
-	var generated = generateURL(req.params.url);
+	// Generate shortened URL
+	var generated = generateURL(req.params.link);
+	// Add to database:
         database.collection("links").insert(
-	    [{ "URL": req.params.url, "shorten": generated }]
+	    [{ "link": req.params.link, "shorten": generated }]
         );
+	// Output JSON
 	res.json(
-	    { "URL": req.params.url, "shorten": "localhost:3000/" + generated }
+            { "link": req.params.url, "shorten": "localhost:3000/"+generated }
 	);
 	database.close();
     });
 }
 
-router.get('/', function(req, res, next) {
-    res.render('index', { title: "Express" });
-});
+function onRedirect(req, res, next) {
+    mongodb.MongoClient.connect(service, (error, database) => {
+	// Error handling
+        if (error) {
+	    res.json({ "error": "Database error." });
+	    console.log(error);
+	    try {
+		database.close();
+	    }
+	    catch {}
+	    return;
+        }
+	database.collection("links").findOne(
+	    { "shorten": req.params.shorten }, { "_id": 0, "link": 1 }
+	).then(result => {
+	    console.log(result);
+	    if (result == null) {
+	        res.json({ "error": "Link not found." });
+      	        console.error("Can't find link.");
+	        return;
+	    }
+	    res.redirect(result.link);
+	}).catch(error => {
+            res.json({ "error": "Search error." });
+            console.error("Search error.");
+	});
+	database.close();
+    });
+}
 
-router.get("/new/:url(*)", onGet);
+function expressGet(req, res, next) {
+    res.render('index', { title: "Express" });    
+}
+
+// Homepage
+router.get('/', expressGet);
+// Link generator endpoint
+router.get("/shrink/:link(*)", onGet);
+// Go to link
+router.get("/:shorten", onRedirect);
 
 module.exports = router;
