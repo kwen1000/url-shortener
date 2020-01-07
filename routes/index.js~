@@ -58,15 +58,8 @@ function onRedirect(req, res, next) {
 	    catch {}
 	    return;
         }
-	/*
-	var result = 
-	database.collection("links").findOne({ "shorten": req.params.shorten })
-	if (result != null)
-	    if (result.link != null)
-		res.redirect(result.link);
-	*/
 	database.collection("links").findOne(
-	    { "shorten": req.params.shorten }, 
+	    { "shorten": req.params.shorten }, { "_id": 0, "link": 1 }
 	).then(result => {
 	    console.log(result);
 	    if (result == null) {

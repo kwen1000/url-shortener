@@ -40,7 +40,7 @@ function onGet(req, res, next) {
         );
 	// Output JSON
 	res.json(
-            { "link": req.params.url, "shorten": "localhost:3000/"+generated }
+            { "link": req.params.link, "shorten": generated }
 	);
 	database.close();
     });
