@@ -33,13 +33,13 @@ exports.generateLink = (req, res, next) => {
 
 exports.redirectLink = (req, res, next) => {
   try {
-  const id = req.params.id;
-  Link
-    .findOne({ shortURL: id })
-    .then((result) => {
-      return res.status(200).redirect(result.originalURL);
-    })
-    .catch((err) => res.status(400).json({ error: `$(err)` }));
+    const id = req.params.id;
+    Link
+      .findOne({ shortURL: id })
+      .then((result) => {
+        return res.status(200).redirect(result.originalURL);
+      })
+      .catch((err) => res.status(400).json({ error: `$(err)` }));
   }
   catch (err) {
     return next(err);
@@ -48,21 +48,15 @@ exports.redirectLink = (req, res, next) => {
 
 exports.getLinkInfo = (req, res, next) => {
   try {
-  const id = req.params.id;
-  Link
-    .findOne({ shortURL: id })
-    .then((result) => {
-      return res.status(200).json(result);
-    })
-    .catch((err) => res.status(400).json({ error: `$(err)` }));
+    const id = req.params.id;
+    Link
+      .findOne({ shortURL: id })
+      .then((result) => {
+        return res.status(200).json(result);
+      })
+      .catch((err) => res.status(400).json({ error: `$(err)` }));
   }
   catch (err) {
     return next(err);
   }
 }
-
-/*
-function expressGet(req, res, next) {
-  res.render('index', { title: "Express" });
-}
-*/
